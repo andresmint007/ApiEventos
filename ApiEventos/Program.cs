@@ -1,11 +1,23 @@
+using Datos;
+using Entidades.Entidades;
+using Entidades.Interfaces;
+using Negocio;
+using Servicios.Usuarios;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IRepositoryComun<Usuario>, UsuarioContextDB>();
+
+builder.Services.AddScoped<IUsuarioServices, UsuarioServicio>();
+
+builder.Services.AddScoped<GestionUsuarios>(); 
 
 var app = builder.Build();
 
