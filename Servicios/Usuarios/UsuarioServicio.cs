@@ -14,7 +14,6 @@ namespace Servicios.Usuarios
     {
         private readonly GestionUsuarios _gestionUsuarios;
 
-        // Inyección de dependencias a través del constructor
         public UsuarioServicio(GestionUsuarios gestionUsuarios)
         {
             _gestionUsuarios = gestionUsuarios;

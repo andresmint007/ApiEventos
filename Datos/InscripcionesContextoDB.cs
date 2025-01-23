@@ -121,25 +121,20 @@ namespace Datos
             List<EventoIsncritos> eventos = new List<EventoIsncritos>();
             try
             {
-                // Crear conexión a la base de datos
                 using (MySqlConnection conn = new MySqlConnection(_string_BD))
                 {
                     await conn.OpenAsync();
 
-                    // Crear el comando
                     using (MySqlCommand command = new MySqlCommand("PAObtenerEventosParticipante", conn))
                     {
-                        // Configurar el comando como procedimiento almacenado
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Ejecutar la consulta de forma asíncrona
                         using (DbDataReader reader = await command.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())
                             {
                                 var eventoIns = new EventoIsncritos
                                 {
-                                    // Asignar valores de las columnas
                                     nombre = reader["EVT_Nombre"].ToString(),
                                     descripcion = reader["EVT_Descripcion"].ToString(),
                                     fechaHora = Convert.ToDateTime(reader["EVT_FechaHora"]),
@@ -156,7 +151,6 @@ namespace Datos
             }
             catch (Exception ex)
             {
-                // Manejo de errores (puedes usar un logger aquí)
                 Console.WriteLine($"Error al ejecutar la consulta: {ex.Message}");
             }
             return eventos;
