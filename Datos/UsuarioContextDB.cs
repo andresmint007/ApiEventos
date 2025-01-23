@@ -8,6 +8,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 
 namespace Datos
 {
@@ -24,7 +25,7 @@ namespace Datos
             throw new NotImplementedException();
         }
 
-        public Task<Usuario> CrearAsync(Usuario entity)
+        public Task<int> CrearAsync(Usuario entity)
         {
             throw new NotImplementedException();
         }
@@ -34,9 +35,81 @@ namespace Datos
             throw new NotImplementedException();
         }
 
-        public Task<Usuario> ObtenerPorIdAsync(int id)
+        public async Task<Usuario> ObtenerPorIdAsync(int id)
+        {;
+
+            Usuario usuario = null;
+
+            string query = "SELECT USU_IdUsuario,USU_Nombre, USU_Email, USU_Password, USU_FechaCreacion " +
+                           "FROM Usuarios " +
+                           "WHERE USU_IdUsuario = @Iduser";
+
+            using (MySqlConnection conn = new MySqlConnection(_string_BD))
+            {
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@Iduser", id);
+
+                    using (DbDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            usuario = new Usuario
+                            {
+                                idUsuario = Convert.ToInt32(reader["USU_IdUsuario"]),
+                                nombre = reader["USU_Nombre"].ToString(),
+                                email = reader["USU_Email"].ToString(),
+                                password = reader["USU_Password"].ToString(),
+                                fechaCreacion = Convert.ToDateTime(reader["USU_FechaCreacion"])
+                            };
+                        }
+                    }
+                }
+                await conn.CloseAsync();
+            }
+
+            return usuario;
+        }
+        public async Task<Usuario> ObtenerPorEmail(string email)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentNullException(nameof(email), "El email no puede ser nulo o vacío.");
+
+            Usuario usuario = null;
+
+            string query = "SELECT USU_Nombre, USU_Email, USU_Password, USU_FechaCreacion " +
+                           "FROM Usuarios " +
+                           "WHERE USU_Email = @Email";
+
+            using (MySqlConnection conn = new MySqlConnection(_string_BD))
+            {
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    using (DbDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            usuario = new Usuario
+                            {
+                                nombre = reader["USU_Nombre"].ToString(),
+                                email = reader["USU_Email"].ToString(),
+                                password = reader["USU_Password"].ToString(),
+                                fechaCreacion = Convert.ToDateTime(reader["USU_FechaCreacion"])
+                            };
+                        }
+                    }
+                }
+                await conn.CloseAsync();
+            }
+            
+            return usuario;
+        
         }
 
         public async Task<List<Usuario>> ObtenerTodosAsync()
@@ -45,13 +118,13 @@ namespace Datos
 
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(_string_BD))
+                using (MySqlConnection conn = new MySqlConnection(_string_BD))
                 {
-                    await connection.OpenAsync();
+                    await conn.OpenAsync();
 
                     string query = "SELECT USU_IdUsuario, USU_Nombre, USU_Email, USU_Password, USU_FechaCreacion FROM Usuarios";
 
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, conn))
                     {
                         using (DbDataReader reader = await command.ExecuteReaderAsync())  
                         {
@@ -72,14 +145,13 @@ namespace Datos
                             }
                         }
                     }
+                    await conn.CloseAsync();
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de excepciones
                 Console.WriteLine("Error al obtener los usuarios: " + ex.Message);
             }
-
             return usuarios;
         }
 

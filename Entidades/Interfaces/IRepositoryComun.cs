@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entidades.Entidades;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,10 @@ namespace Entidades.Interfaces
 {
     public interface IRepositoryComun <T>
     {
-        Task<T> CrearAsync(T entity);
+        Task<int> CrearAsync(T entity);
         Task<T> ObtenerPorIdAsync(int id);
         Task<List<T>> ObtenerTodosAsync();
+        Task<T> ObtenerPorEmail(string email);
         Task<bool> ActualizarAsync(T entity);
         Task<bool> EliminarAsync(int id);
     }

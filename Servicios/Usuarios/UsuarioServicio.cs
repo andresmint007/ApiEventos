@@ -1,5 +1,6 @@
 ﻿using Entidades.Entidades;
 using Entidades.Interfaces;
+using Entidades.Login;
 using Negocio;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,10 @@ namespace Servicios.Usuarios
         public async Task<List<Usuario>> GetUsuarios()
         {
             return await _gestionUsuarios.ObtenerUsuariosCompletos();
+        }
+        public async Task<LoginApp> LoginApp(LoginApp loginTry)
+        {
+            return await _gestionUsuarios.LoginUsuarios(loginTry);
         }
     }
 }
