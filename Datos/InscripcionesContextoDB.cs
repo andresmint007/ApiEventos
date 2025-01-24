@@ -133,7 +133,7 @@ namespace Datos
                         {
                             while (await reader.ReadAsync())
                             {
-                                var eventoIns = new EventoIsncritos
+                                EventoIsncritos eventoIns = new EventoIsncritos
                                 {
                                     idEvento = Convert.ToInt32(reader["EVT_IdEvento"]),
                                     nombre = reader["EVT_Nombre"].ToString(),
