@@ -88,7 +88,7 @@ namespace Datos
         {
 
             int cuenta = 0;
-            string query = "SELECT COUNT(INS_IdInscripcion) FROM inscripciones WHERE EVT_IdEvento = @idEvento AND USU_IdUsuario =@idUsuario;";
+            string query = "SELECT COUNT(INS_IdInscripcion) FROM inscripciones WHERE USU_IdUsuario =@idUsuario;";
 
             try
             {
