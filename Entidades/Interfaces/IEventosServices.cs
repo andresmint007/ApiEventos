@@ -16,7 +16,6 @@ namespace Entidades.Interfaces
         public Task <RespuestaGeneral<bool>> EliminarEvento(int idEvento);
         public Task<RespuestaGeneral<List<Evento>>> ListarEventos();
         public Task<RespuestaGeneral<List<EventoIsncritos>>> ObtenerEventos();
-
         public Task<RespuestaGeneral<string>> InscribirUsuario(int idEvento,int idUsuario);
        
 

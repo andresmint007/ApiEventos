@@ -1,6 +1,7 @@
 ﻿using Entidades.Entidades;
 using Entidades.Interfaces;
 using Entidades.Login;
+using Entidades.Response;
 using Negocio;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,36 @@ namespace Servicios.Usuarios
         public async Task<LoginApp> LoginApp(LoginApp loginTry)
         {
             return await _gestionUsuarios.LoginUsuarios(loginTry);
+        }
+
+        public async Task<RespuestaGeneral<Usuario>> ObtenerUsuarioporEmail(string email)
+        {
+            RespuestaGeneral<Usuario> response = new RespuestaGeneral<Usuario>();
+            try
+            {
+                Usuario user = new Usuario();
+                
+                user = await _gestionUsuarios.ObtenerUsuarioPorEmial(email);
+                if (user == null)
+                {
+                    response.statusCode = 400;
+                    response.message = "El usuario no existe";
+                    response.data = null;
+                }
+                else
+                {
+                    user.password = string.Empty;
+                    response.statusCode = 200;
+                    response.message = "Conusltado Ok";
+                    response.data = user;
+                }
+            }
+            catch (Exception ex) {
+                response.statusCode = 400;
+                response.message = "Ocurrio un error en el servicio de obtener usuario";
+                response.data = null;
+            }
+            return response;
         }
     }
 }

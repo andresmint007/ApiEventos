@@ -28,7 +28,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false
         };
     });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin", policy =>
+    {
+        policy.AllowAnyOrigin() 
+              .AllowAnyHeader() 
+              .AllowAnyMethod();
+    });
+});
 builder.Services.AddScoped<IRepositoryComun<Usuario>, UsuarioContextDB>();
 builder.Services.AddScoped<IRepositoryComun<Evento>, EventoContextoDB>();
 builder.Services.AddScoped<InscripcionesContextoDB>();
@@ -41,8 +49,9 @@ builder.Services.AddScoped<IEventosServices, EventosService>();
 
 
 var app = builder.Build();
+app.UseCors("AllowAnyOrigin");
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

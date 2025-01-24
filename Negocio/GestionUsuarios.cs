@@ -45,6 +45,19 @@ namespace Negocio
             }
             return objReturn;
         }
+        public async Task<Usuario> ObtenerUsuarioPorEmial(string email)
+        {
+            Usuario objReturn = new Usuario();
+            try
+            {
+                objReturn = await _usuarioRepository.ObtenerPorEmail(email);
+            }
+            catch (Exception ex)
+            {
+                return objReturn;
+            }
+            return objReturn;
+        }
 
         public async Task<LoginApp> LoginUsuarios(LoginApp loginTry)
         {

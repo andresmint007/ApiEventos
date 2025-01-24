@@ -21,7 +21,7 @@ namespace Datos
 
             _string_BD = configuration!.GetConnectionString("ConexionBaseDatos")!;
         }
-        public async Task<int> InscribirEventoUsuario(int idUsuario, int idEvento)
+        public async Task<int> InscribirEventoUsuario( int idEvento, int idUsuario)
         {
             int idinscripcion = 0;
             using (MySqlConnection conn = new MySqlConnection(_string_BD))
@@ -29,7 +29,7 @@ namespace Datos
                 try
                 {
                     await conn.OpenAsync();
-                    using (MySqlCommand cmd = new MySqlCommand("PAInsertarEvento", conn))
+                    using (MySqlCommand cmd = new MySqlCommand("PAInscribirEvento", conn))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("p_idEvento", idEvento);
@@ -135,6 +135,7 @@ namespace Datos
                             {
                                 var eventoIns = new EventoIsncritos
                                 {
+                                    idEvento = Convert.ToInt32(reader["EVT_IdEvento"]),
                                     nombre = reader["EVT_Nombre"].ToString(),
                                     descripcion = reader["EVT_Descripcion"].ToString(),
                                     fechaHora = Convert.ToDateTime(reader["EVT_FechaHora"]),

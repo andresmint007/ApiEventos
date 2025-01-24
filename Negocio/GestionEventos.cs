@@ -54,6 +54,7 @@ namespace Negocio
             bool razonEliminado = false;
             try
             {
+
                 razonEliminado = await _eventoRepository.EliminarAsync(idEvento);
 
             }
@@ -91,7 +92,7 @@ namespace Negocio
                     }
                     else
                     {
-                        return "ERROR No pudo inscrbirse el usuario intente mas tarde.";
+                        return "ERROR El Usuario Ya esta registrado en este evento";
 
 
                     }
@@ -108,6 +109,22 @@ namespace Negocio
                 return "EROR: Ocurrio un error al insribir el usuario";
 
             }
+        }
+        public async Task<int> ObtenerUsuarioEvento(int idEvento)
+        {
+            int asistentes = 0;
+            try
+            {
+               
+                asistentes = await _inscripcionesRepository.ObetnerNumeroParticipantes(idEvento);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                asistentes= 1;
+
+            }
+            return asistentes;
         }
         public async Task<string> ValidarInscripcion(int idEvento, int idUsuario)
         {
@@ -151,6 +168,7 @@ namespace Negocio
                 List<EventoIsncritos>  eventosBD = await _inscripcionesRepository.ObetenerEventosInscritos();
                 eventosinscritos = eventosBD.Select(x => new EventoIsncritos
                 {
+                    idEvento = x.idEvento,
                     nombre = x.nombre,
                     descripcion = x.descripcion,
                     capacidad = x.capacidad,

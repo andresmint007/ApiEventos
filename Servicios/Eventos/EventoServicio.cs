@@ -14,7 +14,6 @@ namespace Servicios.Eventos
     {
         private readonly GestionEventos _gestionEventos;
 
-        // Inyección de dependencias a través del constructor
         public EventosService(GestionEventos gestionEventos)
         {
             _gestionEventos = gestionEventos;
@@ -97,17 +96,29 @@ namespace Servicios.Eventos
 
                 if (await validarEvento(idEvento))
                 {
-                    bool reason = await _gestionEventos.DesactivarEvento(idEvento);
-                    if (reason)
+                    int asistentes = await _gestionEventos.ObtenerUsuarioEvento(idEvento);
+                    if (asistentes == 0)
                     {
-                        response.statusCode = 200;
-                        response.message = "Evento desactivado satisfactoriamente";
-                        response.data = reason;
+
+
+                        bool reason = await _gestionEventos.DesactivarEvento(idEvento);
+                        if (reason)
+                        {
+                            response.statusCode = 200;
+                            response.message = "Evento desactivado satisfactoriamente";
+                            response.data = reason;
+                        }
+                        else
+                        {
+                            response.statusCode = 400;
+                            response.message = "El evento no pudo ser desactivado, revise la configuracion";
+                            response.data = false;
+                        }
                     }
                     else
                     {
                         response.statusCode = 400;
-                        response.message = "El evento no pudo ser desactivado, revise la configuracion";
+                        response.message = "El evento no pudo ser desactivado,porque aun tiene usuarios inscritos";
                         response.data = false;
                     }
                 }
@@ -141,6 +152,7 @@ namespace Servicios.Eventos
                 return false;
             }
         }
+
         public Task<RespuestaGeneral<List<Evento>>> ListarEventos()
         {
             throw new NotImplementedException();

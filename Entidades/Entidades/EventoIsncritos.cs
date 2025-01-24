@@ -9,6 +9,7 @@ namespace Entidades.Entidades
 {
     public class EventoIsncritos
     {
+        public int idEvento {  get; set; }
         public string nombre { get; set; }
         public string descripcion { get; set; }
         public DateTime fechaHora { get; set; }

@@ -19,22 +19,7 @@ namespace Datos
 
             _string_BD = configuration!.GetConnectionString("ConexionBaseDatos")!;
         }
-        public Task<bool> ActualizarAsync(Usuario entity)
-        {
-
-            throw new NotImplementedException();
-        }
-
-        public Task<int> CrearAsync(Usuario entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> EliminarAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
+      
         public async Task<Usuario> ObtenerPorIdAsync(int id)
         {;
 
@@ -79,7 +64,7 @@ namespace Datos
 
             Usuario usuario = null;
 
-            string query = "SELECT USU_Nombre, USU_Email, USU_Password, USU_FechaCreacion " +
+            string query = "SELECT USU_IdUsuario, USU_Nombre, USU_Email, USU_Password, USU_FechaCreacion " +
                            "FROM Usuarios " +
                            "WHERE USU_Email = @Email";
 
@@ -97,6 +82,8 @@ namespace Datos
                         {
                             usuario = new Usuario
                             {
+
+                                idUsuario = Convert.ToInt32( reader["USU_IdUsuario"]),
                                 nombre = reader["USU_Nombre"].ToString(),
                                 email = reader["USU_Email"].ToString(),
                                 password = reader["USU_Password"].ToString(),
@@ -153,6 +140,21 @@ namespace Datos
                 Console.WriteLine("Error al obtener los usuarios: " + ex.Message);
             }
             return usuarios;
+        }
+        public Task<bool> ActualizarAsync(Usuario entity)
+        {
+
+            throw new NotImplementedException();
+        }
+
+        public Task<int> CrearAsync(Usuario entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> EliminarAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
     }

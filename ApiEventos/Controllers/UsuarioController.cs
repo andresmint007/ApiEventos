@@ -1,13 +1,16 @@
 ﻿using Entidades.Entidades;
 using Entidades.Interfaces;
+using Entidades.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Negocio;
+using Servicios.Eventos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ApiEventos.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase
@@ -18,18 +21,17 @@ namespace ApiEventos.Controllers
         }
 
         [HttpGet]
-        [Route("ObtenerUsuarios")]
-        public async Task<ActionResult<IEnumerable<Usuario>>> ObtenerUsuarios()
+        [Route("ObtenerUsuarioEmail")]
+        public async Task<ActionResult<RespuestaGeneral<Usuario>>> ObtenerUsuarioEmail(string email)
         {
             try
             {
-                var usuarios = await _usuarioService.GetUsuarios();
-
-                return Ok(usuarios);
+                RespuestaGeneral<Usuario> respuestaGeneral = await _usuarioService.ObtenerUsuarioporEmail(email);
+                return StatusCode(respuestaGeneral.statusCode, respuestaGeneral);
             }
             catch (System.Exception ex)
             {
-                return StatusCode(500, $"Error al obtener los usuarios: {ex.Message}");
+                return StatusCode(500, $"Error: {ex.Message}");
             }
         }
 
